@@ -11,7 +11,7 @@ lemma Reachable.of_dist_ne_zero {u v : V} (h : G.dist u v ≠ 0) : G.Reachable u
 
 lemma exists_walk_of_dist_ne_zero {u v : V} (h : G.dist u v ≠ 0) :
     ∃ p : G.Walk u v, p.length = G.dist u v :=
-  Reachable.exists_walk_of_dist (Reachable.of_dist_ne_zero h)
+  (Reachable.of_dist_ne_zero h).exists_walk_of_dist
 
 namespace Walk
 

@@ -9,17 +9,10 @@ variable {V : Type*} (G : SimpleGraph V) {G}
 /- The distance between vertices is equal to `1` if and only if these vertices are adjacent. -/
 theorem dist_eq_one_iff_adj {u v : V} : G.dist u v = 1 ↔ G.Adj u v := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · let ⟨w, hw⟩ := exists_walk_of_dist_ne_zero (ne_zero_of_eq_one h)
-    rw [h] at hw
-    apply w.adj_of_length_eq_one hw
-  · have : (Adj.toWalk h).length = 1 := by rw [Walk.length_cons, Walk.length_nil]
-    have : G.dist u v ≤ 1 := by
-      rw [← this]
-      apply dist_le
-    rw [← LE.le.ge_iff_eq this, Nat.succ_le_iff]
-    apply Reachable.pos_dist_of_ne
-    · apply Adj.reachable h
-    · apply Adj.ne h
+  · let ⟨w, hw⟩ := exists_walk_of_dist_ne_zero <| ne_zero_of_eq_one h
+    exact w.adj_of_length_eq_one <| h ▸ hw
+  · have : h.toWalk.length = 1 := Walk.length_cons _ _
+    exact ge_antisymm (h.reachable.pos_dist_of_ne h.ne) (this ▸ dist_le _)
 
 theorem dist_eq_two_iff {u v : V} :
     G.dist u v = 2 ↔ u ≠ v ∧ ¬ G.Adj u v ∧ Nonempty (G.commonNeighbors u v) := by
